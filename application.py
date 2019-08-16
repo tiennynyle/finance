@@ -58,10 +58,10 @@ def index():
         index_shares = int(stock["SUM(shares)"])
         quote = lookup(index_symbol)
         index_price = quote["price"]
-        index_total = float(index_price) * index_shares
         stock["price"] = index_price
         stock["name"] = quote["name"]
         stock["total"] = index_total
+    index_total = float(index_price) * index_shares
     index_grandtotal = index_total + cash_remained
 
     return render_template("index.html", stocks=stocks, index_grandtotal = index_grandtotal, cash_remained = cash_remained)

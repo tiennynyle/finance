@@ -1,4 +1,4 @@
-import os
+#import os
 import datetime
 
 from cs50 import SQL
@@ -53,16 +53,11 @@ def index():
 
     stocks = db.execute("SELECT symbol, SUM(shares) FROM purchase_history WHERE user_id = :user_id GROUP BY symbol;", user_id=session["user_id"])
     for stock in stocks:
-        index_shares = int(stock["SUM(shares)"])
-        stock["price"] = index_price
+        quote = lookup(symbol)
         stock["name"] = quote["name"]
-        stock["total"] = index_total
-        index_symbol = stock["symbol"]
-    quote = lookup(index_symbol)
-    index_price = quote["price"]
-    index_total = float(index_price) * index_shares
-    index_grandtotal = index_total + cash_remained
-
+        stock["price"] = quote["price"]
+        stock["total"] = float(index_price) * int(stock["SUM(shares)"])
+    index_grandtotal = stock["total"] + cash_remained
     return render_template("index.html", stocks=stocks, index_grandtotal = index_grandtotal, cash_remained = cash_remained)
 
 

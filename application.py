@@ -52,7 +52,7 @@ def index():
     cash_remained = check_cash[0]["cash"]
 
     stocks = db.execute("SELECT symbol, SUM(shares) FROM purchase_history WHERE user_id = :user_id GROUP BY symbol;", user_id=session["user_id"])
-
+    global stock
     for stock in stocks:
         index_shares = int(stock["SUM(shares)"])
         stock["price"] = index_price

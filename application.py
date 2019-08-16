@@ -245,26 +245,26 @@ def register():
 
         # Ensure username was submitted
         if not username:
-            return apology("must provide username", 402)
+            return apology("must provide username", 400)
 
         # Ensure password was submitted
         elif not password:
-            return apology("must provide password", 402)
+            return apology("must provide password", 400)
 
         # Ensure password confirmation was submitted
         elif not confirmation:
-            return apology("must confirm password", 402)
+            return apology("must confirm password", 400)
 
         # Ensure password matches confirmation
         elif password != confirmation:
-            return apology("Password must match Confirmation", 402)
+            return apology("Password must match Confirmation", 400)
         #security
         hash = generate_password_hash(password)
         new_user = db.execute("INSERT INTO users(username, hash) VALUES (:username, :hash)", username = username, hash = hash)
 
         # unique username constraint violated?
         if not new_user:
-            return apology("username taken", 402)
+            return apology("username taken", 400)
 
         # Remember which user has logged in
         session["user_id"] = new_user

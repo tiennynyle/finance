@@ -62,6 +62,7 @@ def index():
         stock["price"] = index_price
         stock["name"] = quote["name"]
         stock["total"] = index_total
+        global index_grandtotal
         index_grandtotal = index_total + cash_remained
 
     return render_template("index.html", stocks=stocks, index_grandtotal = index_grandtotal, cash_remained = cash_remained)

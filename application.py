@@ -53,10 +53,11 @@ def index():
 
     stocks = db.execute("SELECT symbol, SUM(shares) FROM purchase_history WHERE user_id = :user_id GROUP BY symbol;", user_id=session["user_id"])
     for stock in stocks:
+        symbol = str(stock["symbol"])
         quote = lookup(symbol)
         stock["name"] = quote["name"]
         stock["price"] = quote["price"]
-        stock["total"] = float(index_price) * int(stock["SUM(shares)"])
+        stock["total"] = float(stock["price"]) * int(stock["SUM(shares)"])
     index_grandtotal = stock["total"] + cash_remained
     return render_template("index.html", stocks=stocks, index_grandtotal = index_grandtotal, cash_remained = cash_remained)
 

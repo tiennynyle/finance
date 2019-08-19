@@ -122,8 +122,9 @@ def check():
     check_username = db.execute("SELECT username FROM users WHERE username =:username", username = username)
 
     if not check_username and len(username) > 1:
-        response = {"status": True}
-        return jsonify(response), 200
+        response = jsonify({"status": True})
+        response.status_code = 200
+        return response
     else:
         response = {"status": False}
         return jsonify(response) , 400

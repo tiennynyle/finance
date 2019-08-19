@@ -52,13 +52,18 @@ def index():
     cash_remained = check_cash[0]["cash"]
 
     stocks = db.execute("SELECT symbol, SUM(shares) FROM purchase_history WHERE user_id = :user_id GROUP BY symbol;", user_id=session["user_id"])
+
+    total = 0 ;
+
     for stock in stocks:
         symbol = str(stock["symbol"])
         quote = lookup(symbol)
         stock["name"] = quote["name"]
         stock["price"] = quote["price"]
-        stock["total"] = float(stock["price"]) * int(stock["SUM(shares)"])
-    index_grandtotal = stock["total"] + cash_remained
+        stock["total"]  = float(stock["price"]) * int(stock["SUM(shares)"])
+        total = stock["total"]
+
+    index_grandtotal = total + cash_remained
     return render_template("index.html", stocks=stocks, index_grandtotal = index_grandtotal, cash_remained = cash_remained)
 
 
@@ -117,9 +122,11 @@ def check():
     check_username = db.execute("SELECT username FROM users WHERE username =:username", username = username)
 
     if not check_username and len(username) > 1:
-        return jsonify(True)
+        response = {"status": True}
+        return jsonify(response)
     else:
-        return jsonify(False)
+        response = {"status": False}
+        return jsonify(response)
 
 @app.route("/history")
 @login_required
@@ -231,12 +238,11 @@ def quote():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
-
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        confirmation = request.form.get("confirmation")
+        username = request.form["username"]
+        confirmation = request.form["confirmation"]
+        password = request.form["password"]
 
         # Ensure username was submitted
         if not username:

@@ -61,7 +61,9 @@ def index():
         stock["name"] = quote["name"]
         stock["price"] = quote["price"]
         stock["total"]  = float(stock["price"]) * int(stock["SUM(shares)"])
+        stock["price"] = usd(stock["price"])
         total = stock["total"]
+        stock["total"]  = usd( stock["total"] )
 
     index_grandtotal = total + cash_remained
 

@@ -96,7 +96,7 @@ def buy():
         total_price = price_per_share * int(shares)
 
         available_cash = rows[0]["cash"]
-å
+
         if available_cash < total_price:
             return apology("not enough cash to complete the transaction", 400)
 

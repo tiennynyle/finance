@@ -123,10 +123,10 @@ def check():
 
     if not check_username and len(username) > 1:
         response = {"status": True}
-        return jsonify(response)
+        return jsonify(response), 200
     else:
         response = {"status": False}
-        return jsonify(response)
+        return jsonify(response) , 400
 
 @app.route("/history")
 @login_required

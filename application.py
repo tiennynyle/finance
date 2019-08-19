@@ -127,7 +127,7 @@ def check():
         return jsonify(True)
     else:
         response = {"status": False}
-        return jsonify(response) , 200
+        return jsonify(False)
 
 @app.route("/history")
 @login_required

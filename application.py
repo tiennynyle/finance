@@ -76,13 +76,13 @@ def buy():
         shares = request.form.get("shares")
 
         if not symbol:
-            return apology("must provide symbol", 406)
+            return apology("must provide symbol", 400)
         elif not shares:
-            return apology("must provide number of shares", 406)
+            return apology("must provide number of shares", 400)
 
         quote = lookup(symbol)
         if quote == None:
-            return apology("invalid symbol",406)
+            return apology("invalid symbol",400)
 
         #Check if enough cash
         rows = db.execute("SELECT cash FROM users WHERE id = :user_id", user_id=session["user_id"])
@@ -93,7 +93,7 @@ def buy():
         available_cash = rows[0]["cash"]
 
         if available_cash < total_price:
-            return apology("not enough cash to complete the transaction", 406)
+            return apology("not enough cash to complete the transaction", 400)
 
         cash_remained = available_cash - total_price
         date_purchased = datetime.datetime.now()
@@ -224,9 +224,9 @@ def quote():
         quote = lookup(request.form.get("symbol"))
 
         if not quote:
-            return apology("must provide quote", 405)
+            return apology("must provide quote", 400)
         if quote == None:
-            return apology("invalid symbol",405)
+            return apology("invalid symbol",400)
         return render_template("quoted.html", quote=quote)
 
     else:

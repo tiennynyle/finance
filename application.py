@@ -108,6 +108,7 @@ def buy():
         #check if the stock has been bought by that user
         purchased_stock = db.execute("SELECT shares FROM purchase_history WHERE id = :user_id AND symbol =:symbol", user_id=session["user_id"], symbol=symbol)
 
+        print ("Checking something menaingful here")
         if len(purchased_stock) == 0:
             db.execute("INSERT INTO purchase_history (user_id, symbol, shares, price, `date purchased`) VALUES(:user_id, :symbol, :shares, :price, :date_purchased)",user_id=session["user_id"],symbol=symbol,shares=shares, price=price_per_share, date_purchased=date_purchased)
         else:

@@ -76,8 +76,14 @@ def buy():
     """Buy shares of stock"""
     if request.method == "POST":
         symbol = request.form.get("symbol")
-        shares = int(request.form.get("shares"))
+        aShare = 0
+        try:
+            shares = int(request.form.get("shares"))
+            aShare = shares
+        except:
+            return apology("must provide number of shares", 400)
 
+        share = aShare
         if not symbol:
             return apology("must provide symbol", 400)
         elif not shares:

@@ -26,8 +26,7 @@
             let confirmation =  $("#confirmation").val();
             let endpoint = "/check?username=" + username;
             $.get(endpoint, function(  e) {
-                console.log(e);
-                if (e.status === false) {
+                if (e === false) {
                     alert(` ${username} has been registered`);
                 }else {
                     // Empty

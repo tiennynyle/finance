@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block main %}
+    <table class= "table table-striped">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Shares</th>
+                <th>Price</th>
+                <th>TOTAL</th>
+            </tr>
+        </thead>
+
+        <tfoot>
+            <tr>
+                <td colspan="4"></td>
+                <td><b>{{index_grandtotal}}</b></td>
+            </tr>
+        </tfoot>
+
+        <tbody>
+        {% for stock in stocks %}
+            <tr>
+                <td>{{stock["symbol"]}}</td>
+                <td>{{stock["name"]}}</td>
+                <td>{{stock["SUM(shares)"]}}</td>
+                <td>{{stock["price"]}}</td>
+                <td>{{stock["total"]}}</td>
+            </tr>
+        {% endfor %}
+            <tr>
+                <td colspan="4" style="text-align:left;">CASH</td>
+                <td>{{cash_remained}}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

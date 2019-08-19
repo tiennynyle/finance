@@ -9,7 +9,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import apology, login_required, lookup, usd
-#export API_KEY=pk_7da151e50d5a4c9cb4e63305de2cb970
+# export API_KEY=pk_7da151e50d5a4c9cb4e63305de2cb970
 
 
 # Configure application
@@ -47,27 +47,27 @@ if not os.environ.get("API_KEY"):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    #Check remaining cash
+    # Check remaining cash
     check_cash = db.execute("SELECT cash FROM users WHERE id = :user_id", user_id = session["user_id"])
     cash_remained = check_cash[0]["cash"]
 
     stocks = db.execute("SELECT symbol, SUM(shares) FROM purchase_history WHERE user_id = :user_id GROUP BY symbol;", user_id=session["user_id"])
 
-    total = 0 ;
+    total = 0;
 
     for stock in stocks:
         symbol = str(stock["symbol"])
         quote = lookup(symbol)
         stock["name"] = quote["name"]
         stock["price"] = quote["price"]
-        stock["total"]  = float(stock["price"]) * int(stock["SUM(shares)"])
+        stock["total"] = float(stock["price"]) * int(stock["SUM(shares)"])
         total = stock["total"]
         stock["price"] = usd(stock["price"])
-        stock["total"]  = usd( stock["total"] )
+        stock["total"]  = usd(stock["total"])
 
     index_grandtotal = total + cash_remained
 
-    return render_template("index.html", stocks=stocks, index_grandtotal = usd(index_grandtotal), cash_remained = usd(cash_remained))
+    return render_template("index.html", stocks=stocks, index_grandtotal=usd(index_grandtotal), cash_remained=usd(cash_remained))
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -91,14 +91,14 @@ def buy():
             return apology("must provide symbol", 400)
         elif not shares:
             return apology("must provide number of shares", 400)
-        elif  shares < 0:
-            return apology("Shares must be a number bigger than 0",400)
+        elif shares < 0:
+            return apology("Shares must be a number bigger than 0", 400)
 
         quote = lookup(symbol)
         if quote == None:
-            return apology("invalid symbol",400)
+            return apology("invalid symbol", 400)
 
-        #Check if enough cash
+        # Check if enough cash
         rows = db.execute("SELECT cash FROM users WHERE id = :user_id", user_id=session["user_id"])
 
         price_per_share = float(quote["price"])
@@ -111,10 +111,10 @@ def buy():
 
         cash_remained = available_cash - total_price
         date_purchased = datetime.datetime.now()
-        #update cash in database after transaction
+        # update cash in database after transaction
         db.execute("UPDATE users SET cash = :cash_remained WHERE id = :user_id",\
                     cash_remained=cash_remained, user_id=session["user_id"])
-        #check if the stock has been bought by that user
+        # check if the stock has been bought by that user
         purchased_stock = db.execute("SELECT shares FROM purchase_history WHERE id = :user_id AND symbol =:symbol", user_id=session["user_id"], symbol=symbol)
 
         if len(purchased_stock) == 0:
@@ -133,12 +133,13 @@ def buy():
 def check():
     """Return true if username available, else false, in JSON format"""
     username = request.args.get("username")
-    check_username = db.execute("SELECT username FROM users WHERE username =:username", username = username)
+    check_username = db.execute("SELECT username FROM users WHERE username =:username", username=username)
 
     if not check_username and len(username) > 1:
         return jsonify(True)
     else:
         return jsonify(False)
+
 
 @app.route("/history")
 @login_required
@@ -170,10 +171,10 @@ def passwordchange():
         # Ensure password matches confirmation
         elif new_password != new_password_confirmation:
             return apology("Password must match Confirmation", 410)
-        #security
+        # security
         hash = generate_password_hash(new_password)
 
-        #update db with new password
+        # update db with new password
         db.execute("UPDATE users SET hash=:hash WHERE id = :user_id",\
                      hash=hash, user_id=session["user_id"])
         flash("Password Changed!")
@@ -240,7 +241,7 @@ def quote():
         if not quote:
             return apology("must provide quote", 400)
         if quote == None:
-            return apology("invalid symbol",400)
+            return apology("invalid symbol", 400)
         return render_template("quoted.html", quote=quote)
 
     else:
@@ -271,9 +272,9 @@ def register():
         # Ensure password matches confirmation
         elif password != confirmation:
             return apology("Password must match Confirmation", 400)
-        #security
+        # security
         hash = generate_password_hash(password)
-        new_user = db.execute("INSERT INTO users(username, hash) VALUES (:username, :hash)", username = username, hash = hash)
+        new_user = db.execute("INSERT INTO users(username, hash) VALUES (:username, :hash)", username=username, hash=hash)
 
         # unique username constraint violated?
         if not new_user:
@@ -323,7 +324,7 @@ def sell():
         flash("Sold!")
         return redirect("/")
     else:
-        return render_template("sell.html",stocks_owned = stocks_owned)
+        return render_template("sell.html",stocks_owned=stocks_owned)
 
 
 def errorhandler(e):

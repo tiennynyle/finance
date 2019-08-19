@@ -92,8 +92,8 @@ def buy():
         #Check if enough cash
         rows = db.execute("SELECT cash FROM users WHERE id = :user_id", user_id=session["user_id"])
 
-        price_per_share = float(quote["price"])
-        total_price = price_per_share * int(shares)
+        price_per_share = quote["price"]
+        total_price = price_per_share * shares
 
         available_cash = rows[0]["cash"]
 

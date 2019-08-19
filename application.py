@@ -76,13 +76,13 @@ def buy():
     """Buy shares of stock"""
     if request.method == "POST":
         symbol = request.form.get("symbol")
-        shares = request.form.get("shares")
+        shares = int(request.form.get("shares"))
 
         if not symbol:
             return apology("must provide symbol", 400)
         elif not shares:
             return apology("must provide number of shares", 400)
-        elif shares != int or shares < 0:
+        elif shares < 0:
             return apology("Shares must be a number bigger than 0",400)
 
         quote = lookup(symbol)
@@ -101,6 +101,7 @@ def buy():
             return apology("not enough cash to complete the transaction", 400)
 
         cash_remained = available_cash - total_price
+        print (cash_remained)
         date_purchased = datetime.datetime.now()
         #update cash in database after transaction
         db.execute("UPDATE users SET cash = :cash_remained WHERE id = :user_id",\
@@ -111,7 +112,7 @@ def buy():
         if len(purchased_stock) == 0:
             db.execute("INSERT INTO purchase_history (user_id, symbol, shares, price, `date purchased`) VALUES(:user_id, :symbol, :shares, :price, :date_purchased)",user_id=session["user_id"],symbol=symbol,shares=shares, price=price_per_share, date_purchased=date_purchased)
         else:
-            updated_shares = purchased_stock[0]["shares"] + int(shares)
+            updated_shares = purchased_stock[0]["shares"] + shares
             db.execute("UPDATE purchased_history SET shares = :updated_shares WHERE user_id =:user_id AND symbol =:symbol", user_id=session["user_id"], symbol=symbol, updated_shares=updated_shares)
 
         flash("Transaction completed!")

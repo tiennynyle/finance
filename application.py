@@ -78,17 +78,20 @@ def buy():
         symbol = request.form.get("symbol")
         aShare = 0
         try:
+            # Try if we can convert to int
             shares = int(request.form.get("shares"))
             aShare = shares
         except:
-            return apology("must provide number of shares", 400)
+            # Else we can't convert
+            return apology("Not accept non-numeric value", 400)
 
-        share = aShare
+        shares = aShare
+
         if not symbol:
             return apology("must provide symbol", 400)
         elif not shares:
             return apology("must provide number of shares", 400)
-        elif shares < 0:
+        elif  shares < 0:
             return apology("Shares must be a number bigger than 0",400)
 
         quote = lookup(symbol)
@@ -98,7 +101,7 @@ def buy():
         #Check if enough cash
         rows = db.execute("SELECT cash FROM users WHERE id = :user_id", user_id=session["user_id"])
 
-        price_per_share = quote["price"]
+        price_per_share = float(quote["price"])
         total_price = price_per_share * shares
 
         available_cash = rows[0]["cash"]
@@ -107,7 +110,6 @@ def buy():
             return apology("not enough cash to complete the transaction", 400)
 
         cash_remained = available_cash - total_price
-        print (cash_remained)
         date_purchased = datetime.datetime.now()
         #update cash in database after transaction
         db.execute("UPDATE users SET cash = :cash_remained WHERE id = :user_id",\

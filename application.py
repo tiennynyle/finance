@@ -304,11 +304,11 @@ def sell():
         shares = int(request.form.get("shares"))
 
         if not symbol:
-            return apology("must provide symbol", 408)
+            return apology("must provide symbol", 400)
         elif not shares:
-            return apology("must provide number of shares", 408)
+            return apology("must provide number of shares", 400)
         elif shares > available_shares:
-            return apology("You don't have enough shares of this stock", 408)
+            return apology("You don't have enough shares of this stock", 400)
         date_purchased = datetime.datetime.now()
         #update shares
         price_per_share = float(lookup(symbol)["price"])

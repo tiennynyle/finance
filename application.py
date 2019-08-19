@@ -124,7 +124,7 @@ def check():
     if not check_username and len(username) > 1:
         response = jsonify({"status": True})
         response.status_code = 200
-        return response
+        return jsonify(True)
     else:
         response = {"status": False}
         return jsonify(response) , 400

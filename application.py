@@ -79,6 +79,8 @@ def buy():
             return apology("must provide symbol", 400)
         elif not shares:
             return apology("must provide number of shares", 400)
+        elif shares != int or shares < 0:
+            return apology("Shares must be a number bigger than 0",400)
 
         quote = lookup(symbol)
         if quote == None:

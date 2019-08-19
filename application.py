@@ -93,10 +93,10 @@ def buy():
         rows = db.execute("SELECT cash FROM users WHERE id = :user_id", user_id=session["user_id"])
 
         price_per_share = float(quote["price"])
-        total_price = price_per_share * float(shares)
+        total_price = price_per_share * int(shares)
 
         available_cash = rows[0]["cash"]
-
+å
         if available_cash < total_price:
             return apology("not enough cash to complete the transaction", 400)
 
@@ -108,7 +108,6 @@ def buy():
         #check if the stock has been bought by that user
         purchased_stock = db.execute("SELECT shares FROM purchase_history WHERE id = :user_id AND symbol =:symbol", user_id=session["user_id"], symbol=symbol)
 
-        print ("Checking something menaingful here")
         if len(purchased_stock) == 0:
             db.execute("INSERT INTO purchase_history (user_id, symbol, shares, price, `date purchased`) VALUES(:user_id, :symbol, :shares, :price, :date_purchased)",user_id=session["user_id"],symbol=symbol,shares=shares, price=price_per_share, date_purchased=date_purchased)
         else:
